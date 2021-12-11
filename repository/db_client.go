@@ -53,10 +53,15 @@ func DisconnectDBClient() error {
 		return nil
 	}
 
+	defer func() {
+		singletonDBClient = nil
+	}()
+
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancel()
 	if err := singletonDBClient.Disconnect(ctx); err != nil {
 		return err
 	}
+
 	return nil
 }
